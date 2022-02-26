@@ -1,78 +1,66 @@
-import { Application, Container, Sprite, Text, Texture } from "pixi.js";
+import { Application, Texture } from "pixi.js";
+import DisplayFPS from "./util/DisplayFPS";
+import EnhancedSprite from "./util/EnhancedSprite";
+import EnhancedSpriteGroup from "./util/EnhancedSpriteGroup";
+
+const TOTAL_SPRITES = 144;
+const SEC = 1000;
 
 const app = new Application({
   resizeTo: window,
 });
-
-/**
- * TODO:
- * Enhance Animation Based on
- * - Vectorial Math
- * - ZIndex Capability
- * - Last Item never completes the interaction
- */
 
 app.loader
   .add("sprite-itens", "/assets/sprite-itens.json")
   .load((_, resources) => {
     const itens = Object.keys(resources["sprite-itens"].data.frames);
     const itensQtd = itens.length;
-    const scene = new Container();
-    const stackOne = new Container();
-    const stackTwo = new Container();
-    const fpsText = new Text(`FPS: --`, {
-      fill: "#FFF",
-    });
+    const grid = window.innerWidth / 6;
+    const stacksY = 100;
+    const stackOneX = grid;
+    const stackTwoX = grid * 4;
+    const group = new EnhancedSpriteGroup();
+    const fps = new DisplayFPS(app);
 
-    for (let i = 0; i < 144; i++) {
+    for (let i = 0; i < TOTAL_SPRITES; i++) {
       const realIdx = i >= itensQtd ? i - itensQtd : i;
-      const s = new Sprite(Texture.from(itens[realIdx]));
-      s.position.set(0, i + 1);
-      stackOne.addChild(s);
+      const texture = Texture.from(itens[realIdx]);
+      const s = new EnhancedSprite(
+        texture,
+        TOTAL_SPRITES,
+        stacksY,
+        stackOneX,
+        stackTwoX,
+        i
+      );
+      group.addChild(s);
     }
 
-    fpsText.position.set(10, 10);
+    let movings = [];
+    let lastIdxMov = -1;
+    let nextMoving = 0;
 
-    stackOne.position.set(window.innerWidth / 3, window.innerHeight / 2);
-    stackTwo.position.set(stackOne.x + 100, stackOne.y);
-
-    scene.addChild(fpsText);
-    scene.addChild(stackOne);
-    scene.addChild(stackTwo);
-
-    app.stage.addChild(scene);
-
-    const state = {
-      moving: 0,
-      nextMoving: 0,
-    };
-
+    group.position.set(0, 0);
+    app.stage.addChild(group);
     app.ticker.add((delta) => {
-      fpsText.text = `FPS: ${app.ticker.FPS.toFixed()}`;
-      const now = Date.now();
+      fps.update();
 
-      if (state.nextMoving <= now) {
-        state.nextMoving = now + 1000;
-        state.moving += 1;
+      const now = Date.now();
+      if (nextMoving <= now && lastIdxMov < group.children.length - 1) {
+        nextMoving = now + SEC;
+        lastIdxMov += 1;
+        movings = [...movings, lastIdxMov];
       }
 
-      const itensInStackTwo = stackTwo.children.length;
-      for (let i = 0; i <= state.moving; i++) {
-        const item = stackOne.children[stackOne.children.length - 1 - i];
-        const diffX = stackTwo.x - (stackOne.position.x + item.x);
-        const diffY =
-          stackTwo.y + itensInStackTwo + 1 - (stackOne.position.y + item.y);
+      if (movings.length === 0) {
+        return;
+      }
 
-        if (diffX <= 0 && diffY <= 0) {
-          state.moving -= 1;
-          item.position.set(0, itensInStackTwo + 1);
-          stackOne.removeChild(item);
-          stackTwo.addChild(item);
-        } else {
-          item.position.set(
-            item.position.x + (diffX < 0 ? -1 : 1) * 1 * delta,
-            item.position.y + (diffY < 0 ? -1 : 1) * 1 * delta
-          );
+      for (const i of movings) {
+        const item = group.children[i];
+        if (item.move(delta)) {
+          item.fixDist();
+          movings = movings.filter((v) => v !== i);
         }
       }
     });
