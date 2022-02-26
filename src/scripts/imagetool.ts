@@ -52,7 +52,7 @@ const createRandomImageText = (images, delta) => {
 };
 
 app.loader
-  .add("sprite-itens", "/assets/sprite-itens.json")
+  .add("sprite-itens", `${window.location.href}/assets/sprite-itens.json`)
   .load((_, resources) => {
     const itens = Object.keys(resources["sprite-itens"].data.frames);
 
