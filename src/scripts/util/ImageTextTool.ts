@@ -21,7 +21,7 @@ export class ImageTextTool extends Container {
         (a, c, i) => (i < idx ? a + c.width + padding : a),
         0
       );
-      console.log(padding);
+
       item.position.set(offset, 0);
       this.addChild(item);
     });

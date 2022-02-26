@@ -3,10 +3,14 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  entry: path.resolve("./src/scripts", "index.ts"),
+  entry: {
+    stack: path.resolve(__dirname, "./src/scripts/stack.ts"),
+    imagetool: path.resolve(__dirname, "./src/scripts/imagetool.ts"),
+    particle: path.resolve(__dirname, "./src/scripts/particle.ts"),
+  },
   output: {
-    path: __dirname + "/dist",
-    filename: "game.js",
+    path: path.resolve(__dirname, "./dist"),
+    filename: "[name].js",
   },
   target: "web",
   resolve: {
@@ -14,9 +18,36 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      inject: true,
+      title: "Pixi Tests - Stack",
+      filename: "stack.html",
+      chunks: ["stack"],
+      template: "src/template.html",
+    }),
+
+    new HtmlWebpackPlugin({
+      inject: true,
+      title: "Pixi Tests - Image Tool",
+      filename: "imagetool.html",
+      chunks: ["imagetool"],
+      template: "src/template.html",
+    }),
+
+    new HtmlWebpackPlugin({
+      inject: true,
+      title: "Pixi Tests - Particle",
+      filename: "particle.html",
+      chunks: ["particle"],
+      template: "src/template.html",
+    }),
+
+    new HtmlWebpackPlugin({
+      inject: false,
       title: "Pixi Tests",
+      chunks: [],
       template: "src/index.html",
     }),
+
     new CopyWebpackPlugin({
       patterns: [{ from: "src/assets", to: "assets" }],
     }),
