@@ -1,8 +1,9 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const webpack = require("webpack");
 
-module.exports = {
+module.exports = (_, argv) => ({
   entry: {
     stack: path.resolve(__dirname, "./src/scripts/stack.ts"),
     imagetool: path.resolve(__dirname, "./src/scripts/imagetool.ts"),
@@ -17,6 +18,11 @@ module.exports = {
     extensions: [".ts", ".js"],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        BASE_URL: JSON.stringify(argv.mode === 'production' ? 'pixijs-tests' : ''),
+      },
+    }),
     new HtmlWebpackPlugin({
       inject: true,
       title: "Pixi Tests - Stack",
@@ -71,4 +77,4 @@ module.exports = {
     compress: true,
     port: 3000,
   },
-};
+});

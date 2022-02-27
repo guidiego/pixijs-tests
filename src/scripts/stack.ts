@@ -11,7 +11,7 @@ const app = new Application({
 });
 
 app.loader
-  .add("sprite-itens", `${window.location.href}/assets/sprite-itens.json`)
+  .add("sprite-itens", `${process.env.BASE_URL}/assets/sprite-itens.json`)
   .load((_, resources) => {
     const itens = Object.keys(resources["sprite-itens"].data.frames);
     const itensQtd = itens.length;

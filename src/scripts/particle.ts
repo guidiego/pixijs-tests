@@ -143,63 +143,65 @@ class Particle extends Sprite {
 
 document.body.appendChild(app.view);
 app.stage.addChild(sprites);
-app.loader.add(`/assets/revoltfx-spritesheet.json`).load(() => {
-  const fps = new DisplayFPS(app);
-  const spawnPoint = [app.renderer.width / 2, app.renderer.height / 2];
-  const lightEmitter = new ParticleEmitter(
-    "fx-light01",
-    [SEC * 1, SEC * 2],
-    spawnPoint,
-    [15, 5],
-    [0.1, 0.2],
-    [
-      [0.3, 0.3],
-      [0.3, 1.2],
-    ],
-    [200, 30],
-    ["#ffca57", "#c42700"]
-  );
+app.loader
+  .add(`${process.env.BASE_URL}/assets/revoltfx-spritesheet.json`)
+  .load(() => {
+    const fps = new DisplayFPS(app);
+    const spawnPoint = [app.renderer.width / 2, app.renderer.height / 2];
+    const lightEmitter = new ParticleEmitter(
+      "fx-light01",
+      [SEC * 1, SEC * 2],
+      spawnPoint,
+      [15, 5],
+      [0.1, 0.2],
+      [
+        [0.3, 0.3],
+        [0.3, 1.2],
+      ],
+      [200, 30],
+      ["#ffca57", "#c42700"]
+    );
 
-  lightEmitter.init(5, sprites);
+    lightEmitter.init(5, sprites);
 
-  const sparkEmitter = new ParticleEmitter(
-    "fx-flame02",
-    [SEC * 1, SEC * 1],
-    [spawnPoint[0], spawnPoint[1] - 50],
-    [15, 0],
-    [0.5, 2],
-    [
-      [0.1, 0.1],
-      [0.1, 0.1],
-    ],
-    [200, 100],
-    ["#ffca57", "#c42700"]
-  );
+    const sparkEmitter = new ParticleEmitter(
+      "fx-flame02",
+      [SEC * 1, SEC * 1],
+      [spawnPoint[0], spawnPoint[1] - 50],
+      [15, 0],
+      [0.5, 2],
+      [
+        [0.1, 0.1],
+        [0.1, 0.1],
+      ],
+      [200, 100],
+      ["#ffca57", "#c42700"]
+    );
 
-  sparkEmitter.init(2, sprites);
+    sparkEmitter.init(2, sprites);
 
-  const smokeEmitter = new ParticleEmitter(
-    "mc_fx-explo_0019",
-    [SEC * 1, SEC * 2],
-    [spawnPoint[0], spawnPoint[1] - 50],
-    [15, 0],
-    [0.5, 2],
-    [
-      [0.5, 1],
-      [0.5, 1],
-    ],
-    [100, 0],
-    ["#343434", "#4D4D4D"]
-  );
+    const smokeEmitter = new ParticleEmitter(
+      "mc_fx-explo_0019",
+      [SEC * 1, SEC * 2],
+      [spawnPoint[0], spawnPoint[1] - 50],
+      [15, 0],
+      [0.5, 2],
+      [
+        [0.5, 1],
+        [0.5, 1],
+      ],
+      [100, 0],
+      ["#343434", "#4D4D4D"]
+    );
 
-  smokeEmitter.init(2, sprites);
+    smokeEmitter.init(2, sprites);
 
-  app.stage.addChild(fps);
-  app.ticker.add((delta) => {
-    fps.update();
-    const now = Date.now();
-    sprites.children.forEach((c: Particle) => {
-      c.update(delta, now);
+    app.stage.addChild(fps);
+    app.ticker.add((delta) => {
+      fps.update();
+      const now = Date.now();
+      sprites.children.forEach((c: Particle) => {
+        c.update(delta, now);
+      });
     });
   });
-});
