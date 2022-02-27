@@ -20,7 +20,7 @@ module.exports = (_, argv) => ({
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        BASE_URL: JSON.stringify(argv.mode === 'production' ? 'pixijs-tests' : ''),
+        BASE_URL: JSON.stringify(argv.mode === 'production' ? '/pixijs-tests' : ''),
       },
     }),
     new HtmlWebpackPlugin({
