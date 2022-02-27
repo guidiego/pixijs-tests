@@ -5,7 +5,7 @@ import { ParticleEmitter, Particle } from "./util/ParticleEmitter";
 
 const SEC = 1000;
 const app = new Application({ resizeTo: window, backgroundColor: 0x333333 });
-const sprites = new ParticleContainer(10000, {
+const sprites = new ParticleContainer(10, {
   scale: true,
   position: true,
   rotation: true,
@@ -19,7 +19,11 @@ app.loader
   .add(`${process.env.BASE_URL}/assets/revoltfx-spritesheet.json`)
   .load(() => {
     const fps = new DisplayFPS(app);
-    const spawnPoint = [app.renderer.width / 2, app.renderer.height / 2];
+    const spawnPoint = [
+      app.renderer.width / 2,
+      app.renderer.height - app.renderer.height / 5,
+    ];
+
     const lightEmitter = new ParticleEmitter(
       "fx-light01",
       [SEC * 1, SEC * 2],

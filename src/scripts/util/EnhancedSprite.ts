@@ -1,7 +1,7 @@
 import { Sprite, Texture } from "pixi.js";
 
 export class EnhancedSprite extends Sprite {
-  static OFFSET = 5;
+  static OFFSET = 2.5;
 
   private _normalizedX: number;
   private _normalizedY: number;

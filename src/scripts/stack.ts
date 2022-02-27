@@ -16,7 +16,7 @@ app.loader
     const itens = Object.keys(resources["sprite-itens"].data.frames);
     const itensQtd = itens.length;
     const grid = window.innerWidth / 6;
-    const stacksY = 100;
+    const stacksY = 75;
     const stackOneX = grid;
     const stackTwoX = grid * 4;
     const group = new EnhancedSpriteGroup();
